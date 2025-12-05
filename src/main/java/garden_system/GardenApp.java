@@ -3,84 +3,176 @@ package garden_system;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 public class GardenApp extends Application {
 
-    private static TilePane gardenGrid; // Use TilePane for Grid Layout
-    private static Label statusLabel;
+    private static TilePane gardenGrid;
+    private static TextArea logArea; // The new UI Log
+    private static Label dayLabel;
+    private static int dayCount = 1;
+
+    private final GertenSimulationAPI api = new GertenSimulationAPI();
+    private final Random random = new Random();
 
     @Override
     public void start(Stage primaryStage) {
         BorderPane root = new BorderPane();
-        root.setPadding(new Insets(20));
+        root.setPadding(new Insets(15));
 
         // --- Load CSS ---
-        // This line loads the style.css file from your resources folder
-        String css = getClass().getResource("/style.css").toExternalForm();
-        root.getStylesheets().add(css);
+        try {
+            String css = getClass().getResource("/style.css").toExternalForm();
+            root.getStylesheets().add(css);
+        } catch (Exception e) { /* Ignore */ }
 
-        // --- Header ---
+        // --- 1. SETUP LOGGING ---
+        logArea = new TextArea();
+        logArea.setEditable(false);
+        logArea.setWrapText(true);
+        logArea.setStyle("-fx-font-family: 'Consolas', monospace; -fx-font-size: 11px;");
+        // Connect the Logger class to this Text Area
+        GardenLogger.setUiCallback(msg -> logArea.appendText(msg + "\n"));
+
+        // --- 2. HEADER ---
         Label title = new Label("🌿 Computerized Garden System");
         title.getStyleClass().add("header-label");
-
-        statusLabel = new Label("System Ready. Waiting for initialization...");
-        statusLabel.setStyle("-fx-text-fill: #555; -fx-font-style: italic;");
-
-        VBox header = new VBox(10, title, statusLabel);
+        dayLabel = new Label("Day: " + dayCount);
+        dayLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2e7d32;");
+        VBox header = new VBox(5, title, dayLabel);
         header.setAlignment(Pos.CENTER);
-        header.setPadding(new Insets(0, 0, 20, 0));
+        header.setPadding(new Insets(0, 0, 15, 0));
         root.setTop(header);
 
-        // --- Main Garden Grid Area ---
+        // --- 3. LEFT SIDEBAR (Planting) ---
+        VBox sidebar = createPlantingSidebar();
+        root.setLeft(sidebar);
+
+        // --- 4. CENTER (SplitPane: Garden Grid + Log) ---
         gardenGrid = new TilePane();
-        gardenGrid.setHgap(20);
-        gardenGrid.setVgap(20);
-        gardenGrid.setPrefColumns(4); // Try to fit 4 cards per row
-        gardenGrid.setAlignment(Pos.TOP_CENTER);
+        gardenGrid.setHgap(15);
+        gardenGrid.setVgap(15);
+        gardenGrid.setPrefColumns(3);
         gardenGrid.setPadding(new Insets(10));
+        gardenGrid.setAlignment(Pos.TOP_LEFT);
 
-        ScrollPane scrollPane = new ScrollPane(gardenGrid);
-        scrollPane.setFitToWidth(true);
-        scrollPane.setStyle("-fx-background-color: transparent;");
-        root.setCenter(scrollPane);
+        ScrollPane gridScroll = new ScrollPane(gardenGrid);
+        gridScroll.setFitToWidth(true);
+        gridScroll.setStyle("-fx-background-color: transparent;");
 
-        // --- Control Panel ---
+        // Container for Log
+        VBox logContainer = new VBox(5, new Label("📋 System Activity Log"), logArea);
+        logContainer.setPadding(new Insets(10));
+        VBox.setVgrow(logArea, Priority.ALWAYS);
+
+        // SplitPane lets user resize between Grid and Log
+        SplitPane splitPane = new SplitPane();
+        splitPane.setOrientation(Orientation.VERTICAL);
+        splitPane.getItems().addAll(gridScroll, logContainer);
+        splitPane.setDividerPositions(0.7); // 70% Grid, 30% Log
+
+        root.setCenter(splitPane);
+
+        // --- 5. BOTTOM CONTROLS ---
+        HBox controls = createSimulationControls();
+        root.setBottom(controls);
+
+        Scene scene = new Scene(root, 1100, 800);
+        primaryStage.setTitle("Garden Simulation Team 3");
+        primaryStage.setScene(scene);
+        primaryStage.show();
+
+        // Initial Log
+        GardenLogger.log("SYSTEM STARTUP: Ready for simulation.");
+    }
+
+    // --- Sidebar ---
+    private VBox createPlantingSidebar() {
+        VBox box = new VBox(15);
+        box.setPadding(new Insets(15));
+        box.setPrefWidth(240);
+        box.setStyle("-fx-background-color: white; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 1);");
+
+        Label sideTitle = new Label("🌱 New Plant");
+        sideTitle.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+
+        TextField nameInput = new TextField();
+        nameInput.setPromptText("Plant Name");
+
+        ComboBox<String> typeSelect = new ComboBox<>();
+        typeSelect.getItems().addAll("Rose", "Tomato", "Basil", "Cactus", "Sunflower", "Corn", "Tulip");
+        typeSelect.setPromptText("Select Type");
+        typeSelect.setMaxWidth(Double.MAX_VALUE);
+
+        Button addBtn = new Button("Plant It");
+        addBtn.getStyleClass().add("btn-init");
+        addBtn.setMaxWidth(Double.MAX_VALUE);
+
+        addBtn.setOnAction(e -> {
+            String name = nameInput.getText();
+            String type = typeSelect.getValue();
+
+            if (name.isEmpty() || type == null) {
+                GardenLogger.log("UI: Cannot plant without Name and Type.");
+                return;
+            }
+
+            // Create Plant based on Type
+            Plant newPlant = createPlantByType(name, type);
+            GardenManager.getInstance().addPlant(newPlant);
+            GardenLogger.log("UI: Planted new " + type + " named '" + name + "'");
+            nameInput.clear();
+            refreshUI();
+        });
+
+        box.getChildren().addAll(sideTitle, new Label("Name:"), nameInput, new Label("Type:"), typeSelect, addBtn);
+        return box;
+    }
+
+    private Plant createPlantByType(String name, String type) {
+        // Define stats based on type
+        switch (type) {
+            case "Rose": return new Plant(name, type, 10, Arrays.asList("aphids", "beetles"));
+            case "Tomato": return new Plant(name, type, 15, Arrays.asList("worms", "blight"));
+            case "Basil": return new Plant(name, type, 8, Arrays.asList("slugs"));
+            case "Cactus": return new Plant(name, type, 2, Arrays.asList("rot"));
+            case "Sunflower": return new Plant(name, type, 12, Arrays.asList("birds"));
+            case "Corn": return new Plant(name, type, 20, Arrays.asList("locusts"));
+            case "Tulip": return new Plant(name, type, 10, Arrays.asList("aphids"));
+            default: return new Plant(name, "Generic", 10, Arrays.asList("bugs"));
+        }
+    }
+
+    // --- Controls ---
+    private HBox createSimulationControls() {
         HBox controls = new HBox(15);
         controls.setAlignment(Pos.CENTER);
-        controls.setPadding(new Insets(20, 0, 0, 0));
+        controls.setPadding(new Insets(15, 0, 0, 0));
 
-        GertenSimulationAPI api = new GertenSimulationAPI();
-
-        Button btnInit = createStyledButton("🌱 Initialize", "btn-init");
-        btnInit.setOnAction(e -> api.initializeGarden());
+        Button btnSimulate = new Button("🌞 Simulate Full Day");
+        btnSimulate.setStyle("-fx-background-color: #673ab7; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px;");
+        btnSimulate.setOnAction(e -> simulateDayCycle());
 
         Button btnRain = createStyledButton("🌧 Rain", "btn-rain");
         btnRain.setOnAction(e -> api.rain(10));
 
-        Button btnHot = createStyledButton("🔥 Heat Wave", "btn-sun");
-        btnHot.setOnAction(e -> api.temperature(110));
+        Button btnHot = createStyledButton("🔥 Heat", "btn-sun");
+        btnHot.setOnAction(e -> api.temperature(105));
 
-        Button btnPest = createStyledButton("🐛 Pest Attack", "btn-pest");
+        Button btnPest = createStyledButton("🐛 Pest", "btn-pest");
         btnPest.setOnAction(e -> api.parasite("aphids"));
 
-        Button btnReport = createStyledButton("📋 Log State", "btn-log");
-        btnReport.setOnAction(e -> api.getState());
-
-        controls.getChildren().addAll(btnInit, btnRain, btnHot, btnPest, btnReport);
-        root.setBottom(controls);
-
-        Scene scene = new Scene(root, 900, 700); // Larger window for grid
-        primaryStage.setTitle("Garden Simulation Team 3");
-        primaryStage.setScene(scene);
-        primaryStage.show();
+        controls.getChildren().addAll(btnSimulate, new Separator(), btnRain, btnHot, btnPest);
+        return controls;
     }
 
     private Button createStyledButton(String text, String styleClass) {
@@ -89,18 +181,42 @@ public class GardenApp extends Application {
         return btn;
     }
 
-    // --- Static Method to Update UI from API ---
+    // --- Simulation Logic ---
+    private void simulateDayCycle() {
+        dayCount++;
+        dayLabel.setText("Day: " + dayCount);
+        GardenLogger.log("--- STARTING DAY " + dayCount + " ---");
+
+        int randomTemp = 40 + random.nextInt(70);
+        api.temperature(randomTemp);
+
+        if (random.nextInt(100) < 30) {
+            int rain = 5 + random.nextInt(10);
+            api.rain(rain);
+        } else {
+            GardenLogger.log("WEATHER: Sunny day.");
+        }
+
+        if (random.nextInt(100) < 20) {
+            String[] pests = {"aphids", "worms", "slugs", "rot", "locusts"};
+            api.parasite(pests[random.nextInt(pests.length)]);
+        }
+
+        refreshUI();
+    }
+
+    // --- Render Cards ---
     public static void refreshUI() {
         Platform.runLater(() -> {
             gardenGrid.getChildren().clear();
             List<Plant> plants = GardenManager.getInstance().getPlants();
 
             if (plants.isEmpty()) {
-                statusLabel.setText("Garden is empty. Click Initialize.");
+                Label empty = new Label("Garden Empty.");
+                empty.setStyle("-fx-font-size: 18px; -fx-text-fill: #aaa;");
+                gardenGrid.getChildren().add(empty);
                 return;
             }
-
-            statusLabel.setText("Garden Active: " + plants.size() + " plants growing.");
 
             for (Plant p : plants) {
                 gardenGrid.getChildren().add(createPlantCard(p));
@@ -108,56 +224,51 @@ public class GardenApp extends Application {
         });
     }
 
-    // --- Helper to Create a Colorful Plant Card ---
     private static VBox createPlantCard(Plant p) {
-        VBox card = new VBox(8);
+        VBox card = new VBox(5);
         card.getStyleClass().add("plant-card");
 
-        // 1. Icon (Emoji based on name)
-        Label icon = new Label(getPlantEmoji(p.getName()));
+        // ICON LOGIC: Now uses p.getType() instead of Name
+        Label icon = new Label(getPlantEmoji(p.getType()));
         icon.getStyleClass().add("plant-icon");
 
-        // 2. Name
         Label name = new Label(p.getName());
         name.getStyleClass().add("plant-name");
 
-        // 3. Health Bar
+        Label typeLbl = new Label("(" + p.getType() + ")");
+        typeLbl.setStyle("-fx-font-size: 10px; -fx-text-fill: #777;");
+
         ProgressBar healthBar = new ProgressBar(p.getHealth() / 100.0);
         healthBar.setPrefWidth(120);
-        // Dynamic color based on health
         if (p.getHealth() > 70) healthBar.getStyleClass().add("health-bar-high");
         else if (p.getHealth() > 30) healthBar.getStyleClass().add("health-bar-med");
         else healthBar.getStyleClass().add("health-bar-low");
 
-        Label healthLbl = new Label("Health: " + p.getHealth() + "%");
-        healthLbl.getStyleClass().add("status-text");
+        Label detail = new Label("Health: " + p.getHealth() + "%\nWater: " + p.getCurrentWaterLevel() + "/" + p.getWaterRequirement());
+        detail.getStyleClass().add("status-text");
 
-        // 4. Water Level
-        Label waterLbl = new Label("💧 Water: " + p.getCurrentWaterLevel() + " / " + p.getWaterRequirement());
-        waterLbl.getStyleClass().add("status-text");
-        if(Math.abs(p.getCurrentWaterLevel() - p.getWaterRequirement()) > 10) {
-            waterLbl.setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
-        }
-
-        // 5. Alive/Dead Status
         if (!p.isAlive()) {
             card.setStyle("-fx-background-color: #cfd8dc; -fx-opacity: 0.7; -fx-background-radius: 15;");
             icon.setText("💀");
             name.setText(p.getName() + " (Dead)");
         }
 
-        card.getChildren().addAll(icon, name, healthBar, healthLbl, waterLbl);
+        card.getChildren().addAll(icon, name, typeLbl, healthBar, detail);
         return card;
     }
 
-    private static String getPlantEmoji(String name) {
-        String lower = name.toLowerCase();
-        if (lower.contains("rose")) return "🌹";
-        if (lower.contains("tomato")) return "🍅";
-        if (lower.contains("basil")) return "🌿";
-        if (lower.contains("cactus")) return "🌵";
-        if (lower.contains("sunflower")) return "🌻";
-        return "🌱"; // Default
+    private static String getPlantEmoji(String type) {
+        if (type == null) return "🌱";
+        switch (type) {
+            case "Rose": return "🌹";
+            case "Tomato": return "🍅";
+            case "Basil": return "🌿";
+            case "Cactus": return "🌵";
+            case "Sunflower": return "🌻";
+            case "Corn": return "🌽";
+            case "Tulip": return "🌷";
+            default: return "🌱";
+        }
     }
 
     public static void main(String[] args) {

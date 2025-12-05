@@ -4,17 +4,19 @@ import java.util.List;
 
 public class Plant {
     private String name;
-    private int waterRequirement; // Ideal water level
+    private String type; // New field for icon logic
+    private int waterRequirement;
     private int currentWaterLevel;
     private List<String> vulnerableTo;
     private boolean isAlive;
-    private int health; // 0 to 100
+    private int health;
 
-    public Plant(String name, int waterRequirement, List<String> vulnerableTo) {
+    public Plant(String name, String type, int waterRequirement, List<String> vulnerableTo) {
         this.name = name;
+        this.type = type; // Store the type
         this.waterRequirement = waterRequirement;
         this.vulnerableTo = vulnerableTo;
-        this.currentWaterLevel = waterRequirement; // Start healthy
+        this.currentWaterLevel = waterRequirement;
         this.isAlive = true;
         this.health = 100;
     }
@@ -27,7 +29,7 @@ public class Plant {
     public void attack(String parasite) {
         if (vulnerableTo.contains(parasite)) {
             this.health -= 30;
-            GardenLogger.log("WARNING: " + name + " was attacked by " + parasite + "! Health is now " + health);
+            GardenLogger.log("WARNING: " + name + " (" + type + ") attacked by " + parasite + "! Health: " + health);
         } else {
             GardenLogger.log("INFO: " + name + " is immune to " + parasite + ".");
         }
@@ -35,23 +37,20 @@ public class Plant {
     }
 
     public void updateTemperatureReaction(int temp) {
-        // Simple logic: Extreme temps hurt the plant
         if (temp < 40 || temp > 100) {
             this.health -= 10;
-            GardenLogger.log("WARNING: " + name + " is suffering from extreme temperature (" + temp + "F).");
+            GardenLogger.log("WARNING: " + name + " hurting from temp (" + temp + "F).");
         }
         checkHealth();
     }
 
     private void checkHealth() {
-        // Water Logic
         if (currentWaterLevel < 0) currentWaterLevel = 0;
 
-        // If water is way off target (+/- 20), health drops
         int diff = Math.abs(currentWaterLevel - waterRequirement);
         if (diff > 20) {
             health -= 5;
-            GardenLogger.log("WARNING: " + name + " water levels critical. Req: " + waterRequirement + ", Curr: " + currentWaterLevel);
+            GardenLogger.log("WARNING: " + name + " water critical. Req: " + waterRequirement + ", Curr: " + currentWaterLevel);
         }
 
         if (health <= 0) {
@@ -63,13 +62,13 @@ public class Plant {
 
     // Getters
     public String getName() { return name; }
+    public String getType() { return type; } // Getter for type
     public int getWaterRequirement() { return waterRequirement; }
     public List<String> getVulnerableTo() { return vulnerableTo; }
     public boolean isAlive() { return isAlive; }
     public int getHealth() { return health; }
     public int getCurrentWaterLevel() { return currentWaterLevel; }
 
-    // Healing logic for the automated system
     public void heal(int amount) {
         this.health = Math.min(100, this.health + amount);
     }
