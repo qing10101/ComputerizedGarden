@@ -1,3 +1,32 @@
 [2025-12-05 11:14:18] SYSTEM STARTUP
 [2025-12-05 11:14:26] API CALL: initializeGarden()
 [2025-12-05 11:14:26] Garden initialized successfully with default configuration.
+[2025-12-05 11:20:11] SYSTEM STARTUP
+[2025-12-05 11:20:14] API CALL: initializeGarden()
+[2025-12-05 11:20:14] Garden initialized successfully with default configuration.
+[2025-12-05 11:20:20] EVENT: Parasite 'aphids' detected.
+[2025-12-05 11:20:20] AUTOMATION: Pesticide deployed for aphids
+[2025-12-05 11:20:20] WARNING: Rose was attacked by aphids! Health is now 70
+[2025-12-05 11:20:20] INFO: Tomato is immune to aphids.
+[2025-12-05 11:20:20] INFO: Basil is immune to aphids.
+[2025-12-05 11:20:20] INFO: Cactus is immune to aphids.
+[2025-12-05 11:20:23] EVENT: Temperature changed to 110F.
+[2025-12-05 11:20:23] AUTOMATION: Misting fans activated. Cooling garden.
+[2025-12-05 11:20:23] WARNING: Rose is suffering from extreme temperature (110F).
+[2025-12-05 11:20:23] WARNING: Tomato is suffering from extreme temperature (110F).
+[2025-12-05 11:20:23] WARNING: Basil is suffering from extreme temperature (110F).
+[2025-12-05 11:20:23] WARNING: Cactus is suffering from extreme temperature (110F).
+[2025-12-05 11:20:24] EVENT: Raining 5 units.
+[2025-12-05 11:20:28] EVENT: Raining 5 units.
+[2025-12-05 11:20:30] EVENT: Temperature changed to 110F.
+[2025-12-05 11:20:30] AUTOMATION: Misting fans activated. Cooling garden.
+[2025-12-05 11:20:30] WARNING: Rose is suffering from extreme temperature (110F).
+[2025-12-05 11:20:30] WARNING: Tomato is suffering from extreme temperature (110F).
+[2025-12-05 11:20:30] WARNING: Basil is suffering from extreme temperature (110F).
+[2025-12-05 11:20:30] WARNING: Cactus is suffering from extreme temperature (110F).
+[2025-12-05 11:20:34] EVENT: Parasite 'aphids' detected.
+[2025-12-05 11:20:34] AUTOMATION: Pesticide deployed for aphids
+[2025-12-05 11:20:34] WARNING: Rose was attacked by aphids! Health is now 30
+[2025-12-05 11:20:34] INFO: Tomato is immune to aphids.
+[2025-12-05 11:20:34] INFO: Basil is immune to aphids.
+[2025-12-05 11:20:34] INFO: Cactus is immune to aphids.
