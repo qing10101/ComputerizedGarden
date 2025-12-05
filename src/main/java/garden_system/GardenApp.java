@@ -69,13 +69,17 @@ public class GardenApp extends Application {
         gridScroll.setFitToWidth(true);
         gridScroll.setStyle("-fx-background-color: transparent;");
 
-        // Container for Log
+        // Container for Log (Added Style for background opacity)
         VBox logContainer = new VBox(5, new Label("📋 System Activity Log"), logArea);
         logContainer.setPadding(new Insets(10));
+        // NEW: Semi-transparent white background for the log area
+        logContainer.setStyle("-fx-background-color: rgba(255, 255, 255, 0.85); -fx-background-radius: 10;");
+
         VBox.setVgrow(logArea, Priority.ALWAYS);
 
         // SplitPane lets user resize between Grid and Log
         SplitPane splitPane = new SplitPane();
+        splitPane.setStyle("-fx-background-color: transparent;"); // FORCE TRANSPARENCY
         splitPane.setOrientation(Orientation.VERTICAL);
         splitPane.getItems().addAll(gridScroll, logContainer);
         splitPane.setDividerPositions(0.7); // 70% Grid, 30% Log

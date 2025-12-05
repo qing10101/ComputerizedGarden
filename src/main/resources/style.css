@@ -1,77 +1,71 @@
-/* Main Background with a soft nature gradient */
+/* --- MAIN BACKGROUND --- */
 .root {
-    -fx-background-color: linear-gradient(to bottom right, #e0f7fa, #c8e6c9);
+    /* Fallback color if image doesn't load */
+    -fx-background-color: #e8f5e9;
+
+    /* The Background Image */
+    -fx-background-image: url("garden.jpeg");
+    -fx-background-size: cover;       /* Stretch to fill screen */
+    -fx-background-position: center;  /* Center the image */
     -fx-font-family: 'Segoe UI', sans-serif;
 }
 
-/* The Title Header */
+/* --- HEADER --- */
 .header-label {
     -fx-font-size: 28px;
     -fx-font-weight: bold;
-    -fx-text-fill: #2e7d32; /* Dark Green */
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 5, 0, 0, 1);
+    -fx-text-fill: #ffffff; /* White text looks better on photos */
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 5, 0, 0, 1); /* Strong shadow for readability */
 }
 
-/* The scroll pane background (transparent to show gradient) */
-.scroll-pane, .scroll-pane > .viewport {
+/* --- TRANSPARENCY FIXES --- */
+/* Make scroll panes and split panes transparent so we see the garden bg */
+.scroll-pane, .scroll-pane > .viewport, .split-pane {
     -fx-background-color: transparent;
 }
 
-/* Individual Plant Card Styling */
+/* --- CARDS (Opaque so text is readable) --- */
 .plant-card {
-    -fx-background-color: white;
+    -fx-background-color: rgba(255, 255, 255, 0.9); /* 90% White */
     -fx-background-radius: 15;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);
-    -fx-padding: 15;
-    -fx-min-width: 160px;
-    -fx-min-height: 200px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 10, 0, 0, 5);
+    -fx-padding: 10;
+    -fx-min-width: 140px;
     -fx-alignment: center;
 }
 
-/* Plant Name Text */
+/* --- TEXT STYLES --- */
 .plant-name {
-    -fx-font-size: 18px;
+    -fx-font-size: 16px;
     -fx-font-weight: bold;
     -fx-text-fill: #333;
 }
-
-/* The large Emoji Icon */
 .plant-icon {
-    -fx-font-size: 48px;
+    -fx-font-size: 40px;
 }
-
-/* Status Labels (Health, Water) */
 .status-text {
-    -fx-font-size: 12px;
+    -fx-font-size: 11px;
     -fx-text-fill: #555;
 }
 
-/* Progress Bar Styling */
-.progress-bar .track {
-    -fx-background-color: #eee;
-    -fx-background-radius: 5;
-}
-.progress-bar .bar {
-    -fx-background-radius: 5;
-    -fx-background-insets: 0;
-}
-.health-bar-high .bar { -fx-background-color: #4caf50; } /* Green */
-.health-bar-med .bar  { -fx-background-color: #ff9800; } /* Orange */
-.health-bar-low .bar  { -fx-background-color: #f44336; } /* Red */
+/* --- PROGRESS BARS --- */
+.progress-bar .track { -fx-background-color: #eee; }
+.health-bar-high .bar { -fx-background-color: #4caf50; }
+.health-bar-med .bar  { -fx-background-color: #ff9800; }
+.health-bar-low .bar  { -fx-background-color: #f44336; }
 
-/* Control Panel Buttons */
+/* --- BUTTONS --- */
 .button {
     -fx-background-radius: 20;
     -fx-font-weight: bold;
     -fx-text-fill: white;
     -fx-cursor: hand;
-    -fx-padding: 10 20;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 3, 0, 0, 1);
 }
-.btn-rain { -fx-background-color: #2196f3; } /* Blue */
-.btn-sun  { -fx-background-color: #ff9800; } /* Orange */
-.btn-pest { -fx-background-color: #795548; } /* Brown */
-.btn-init { -fx-background-color: #4caf50; } /* Green */
-.btn-log  { -fx-background-color: #607d8b; } /* Grey */
+.btn-rain { -fx-background-color: #2196f3; }
+.btn-sun  { -fx-background-color: #ff9800; }
+.btn-pest { -fx-background-color: #795548; }
+.btn-init { -fx-background-color: #4caf50; }
 
 .button:hover {
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 5, 0, 0, 1);
