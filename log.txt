@@ -30,3 +30,83 @@
 [2025-12-05 11:20:34] INFO: Tomato is immune to aphids.
 [2025-12-05 11:20:34] INFO: Basil is immune to aphids.
 [2025-12-05 11:20:34] INFO: Cactus is immune to aphids.
+[2025-12-05 12:44:08] API CALL: initializeGarden()
+[2025-12-05 12:44:08] Garden initialized successfully with default configuration.
+[2025-12-05 12:44:13] EVENT: Raining 10 units.
+[2025-12-05 12:44:17] EVENT: Temperature changed to 110F.
+[2025-12-05 12:44:17] AUTOMATION: Misting fans activated. Cooling garden.
+[2025-12-05 12:44:17] WARNING: Rose is suffering from extreme temperature (110F).
+[2025-12-05 12:44:17] WARNING: Tomato is suffering from extreme temperature (110F).
+[2025-12-05 12:44:17] WARNING: Basil is suffering from extreme temperature (110F).
+[2025-12-05 12:44:17] WARNING: Cactus is suffering from extreme temperature (110F).
+[2025-12-05 12:44:19] EVENT: Raining 10 units.
+[2025-12-05 12:44:19] AUTOMATION: Drainage opened for Rose
+[2025-12-05 12:44:19] AUTOMATION: Drainage opened for Tomato
+[2025-12-05 12:44:19] AUTOMATION: Drainage opened for Basil
+[2025-12-05 12:44:19] AUTOMATION: Drainage opened for Cactus
+[2025-12-05 12:44:23] EVENT: Parasite 'aphids' detected.
+[2025-12-05 12:44:23] AUTOMATION: Pesticide deployed for aphids
+[2025-12-05 12:44:23] WARNING: Rose was attacked by aphids! Health is now 70
+[2025-12-05 12:44:23] INFO: Tomato is immune to aphids.
+[2025-12-05 12:44:23] INFO: Basil is immune to aphids.
+[2025-12-05 12:44:23] INFO: Cactus is immune to aphids.
+[2025-12-05 12:44:25] EVENT: Temperature changed to 110F.
+[2025-12-05 12:44:25] AUTOMATION: Misting fans activated. Cooling garden.
+[2025-12-05 12:44:25] WARNING: Rose is suffering from extreme temperature (110F).
+[2025-12-05 12:44:25] WARNING: Tomato is suffering from extreme temperature (110F).
+[2025-12-05 12:44:25] WARNING: Basil is suffering from extreme temperature (110F).
+[2025-12-05 12:44:25] WARNING: Cactus is suffering from extreme temperature (110F).
+[2025-12-05 12:44:28] EVENT: Raining 10 units.
+[2025-12-05 12:44:28] WARNING: Rose water levels critical. Req: 10, Curr: 35
+[2025-12-05 12:44:28] WARNING: Tomato water levels critical. Req: 15, Curr: 40
+[2025-12-05 12:44:28] WARNING: Basil water levels critical. Req: 8, Curr: 33
+[2025-12-05 12:44:28] WARNING: Cactus water levels critical. Req: 2, Curr: 27
+[2025-12-05 12:44:28] AUTOMATION: Drainage opened for Rose
+[2025-12-05 12:44:28] AUTOMATION: Drainage opened for Tomato
+[2025-12-05 12:44:28] AUTOMATION: Drainage opened for Basil
+[2025-12-05 12:44:28] AUTOMATION: Drainage opened for Cactus
+[2025-12-05 12:44:29] EVENT: Temperature changed to 110F.
+[2025-12-05 12:44:29] AUTOMATION: Misting fans activated. Cooling garden.
+[2025-12-05 12:44:29] WARNING: Rose is suffering from extreme temperature (110F).
+[2025-12-05 12:44:29] WARNING: Tomato is suffering from extreme temperature (110F).
+[2025-12-05 12:44:29] WARNING: Basil is suffering from extreme temperature (110F).
+[2025-12-05 12:44:29] WARNING: Cactus is suffering from extreme temperature (110F).
+[2025-12-05 12:44:30] EVENT: Parasite 'aphids' detected.
+[2025-12-05 12:44:30] AUTOMATION: Pesticide deployed for aphids
+[2025-12-05 12:44:30] WARNING: Rose was attacked by aphids! Health is now 25
+[2025-12-05 12:44:30] INFO: Tomato is immune to aphids.
+[2025-12-05 12:44:30] INFO: Basil is immune to aphids.
+[2025-12-05 12:44:30] INFO: Cactus is immune to aphids.
+[2025-12-05 12:44:32] EVENT: Raining 10 units.
+[2025-12-05 12:44:32] WARNING: Rose water levels critical. Req: 10, Curr: 40
+[2025-12-05 12:44:32] WARNING: Tomato water levels critical. Req: 15, Curr: 45
+[2025-12-05 12:44:32] WARNING: Basil water levels critical. Req: 8, Curr: 38
+[2025-12-05 12:44:32] WARNING: Cactus water levels critical. Req: 2, Curr: 32
+[2025-12-05 12:44:32] AUTOMATION: Drainage opened for Rose
+[2025-12-05 12:44:32] WARNING: Rose water levels critical. Req: 10, Curr: 35
+[2025-12-05 12:44:32] AUTOMATION: Drainage opened for Tomato
+[2025-12-05 12:44:32] WARNING: Tomato water levels critical. Req: 15, Curr: 40
+[2025-12-05 12:44:32] AUTOMATION: Drainage opened for Basil
+[2025-12-05 12:44:32] WARNING: Basil water levels critical. Req: 8, Curr: 33
+[2025-12-05 12:44:32] AUTOMATION: Drainage opened for Cactus
+[2025-12-05 12:44:32] WARNING: Cactus water levels critical. Req: 2, Curr: 27
+[2025-12-05 12:44:32] EVENT: Temperature changed to 110F.
+[2025-12-05 12:44:32] AUTOMATION: Misting fans activated. Cooling garden.
+[2025-12-05 12:44:32] WARNING: Rose is suffering from extreme temperature (110F).
+[2025-12-05 12:44:32] WARNING: Rose water levels critical. Req: 10, Curr: 35
+[2025-12-05 12:44:32] FATAL: Rose has died.
+[2025-12-05 12:44:32] WARNING: Tomato is suffering from extreme temperature (110F).
+[2025-12-05 12:44:32] WARNING: Tomato water levels critical. Req: 15, Curr: 40
+[2025-12-05 12:44:32] WARNING: Basil is suffering from extreme temperature (110F).
+[2025-12-05 12:44:32] WARNING: Basil water levels critical. Req: 8, Curr: 33
+[2025-12-05 12:44:32] WARNING: Cactus is suffering from extreme temperature (110F).
+[2025-12-05 12:44:32] WARNING: Cactus water levels critical. Req: 2, Curr: 27
+[2025-12-05 12:44:33] EVENT: Parasite 'aphids' detected.
+[2025-12-05 12:44:33] INFO: Tomato is immune to aphids.
+[2025-12-05 12:44:33] WARNING: Tomato water levels critical. Req: 15, Curr: 40
+[2025-12-05 12:44:33] INFO: Basil is immune to aphids.
+[2025-12-05 12:44:33] WARNING: Basil water levels critical. Req: 8, Curr: 33
+[2025-12-05 12:44:33] INFO: Cactus is immune to aphids.
+[2025-12-05 12:44:33] WARNING: Cactus water levels critical. Req: 2, Curr: 27
+[2025-12-05 12:44:35] API CALL: initializeGarden()
+[2025-12-05 12:44:35] Garden initialized successfully with default configuration.
