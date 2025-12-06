@@ -307,6 +307,7 @@ public class GardenApp extends Application {
         VBox buttonBox = new VBox(10);
         buttonBox.setPadding(new Insets(20));
         buttonBox.setSpacing(10);
+        buttonBox.setAlignment(Pos.CENTER);
 
         GardenManager manager = GardenManager.getInstance();
 
@@ -364,14 +365,13 @@ public class GardenApp extends Application {
             buttonBox.getChildren().add(emergencyBtn);
         }
 
-        // Close button
-        Button closeBtn = new Button("Close");
-        closeBtn.setStyle("-fx-pref-width: 250px;");
-        closeBtn.setOnAction(e -> dialog.close());
-        buttonBox.getChildren().add(closeBtn);
-
         dialog.getDialogPane().setContent(buttonBox);
         dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
+
+        // Style the built-in close button to align with custom buttons
+        Button closeButton = (Button) dialog.getDialogPane().lookupButton(ButtonType.CLOSE);
+        closeButton.setPrefWidth(50);
+
         dialog.showAndWait();
     }
 
@@ -379,4 +379,3 @@ public class GardenApp extends Application {
         launch(args);
     }
 }
-
