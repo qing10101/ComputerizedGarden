@@ -110,3 +110,103 @@
 [2025-12-05 12:44:33] WARNING: Cactus water levels critical. Req: 2, Curr: 27
 [2025-12-05 12:44:35] API CALL: initializeGarden()
 [2025-12-05 12:44:35] Garden initialized successfully with default configuration.
+[12:05:45] SYSTEM STARTUP: Ready for simulation.
+[12:05:45] API CALL: initializeGarden()
+[12:05:45] Garden initialized with default configuration.
+[12:05:55] AUTO: Simulation loop started (every 10s).
+[12:06:05] --- STARTING DAY 2 ---
+[12:06:05] EVENT: Temperature changed to 70F.
+[12:06:05] WEATHER: Sunny day.
+[12:06:05] EVENT: Parasite 'rot' detected.
+[12:06:05] ACTION: Desert King healed by 10 points. Health: 100%
+[12:06:05] AUTOMATION: Pesticide deployed for rot
+[12:06:05] INFO: Rose A is immune to rot.
+[12:06:05] INFO: Tomato 1 is immune to rot.
+[12:06:05] INFO: Herb Patch is immune to rot.
+[12:06:05] WARNING: Desert King (Cactus) attacked by rot! Health: 70
+[12:06:05] INFO: Sun Glory is immune to rot.
+[12:06:05] INFO: Gold Corn is immune to rot.
+[12:06:05] INFO: Tulip Field is immune to rot.
+[12:06:05] [INFO][Monitor] Heartbeat day=2 plants=7 alive=7
+[12:06:15] --- STARTING DAY 3 ---
+[12:06:15] EVENT: Temperature changed to 64F.
+[12:06:15] EVENT: Raining 14 units.
+[12:06:15] WARNING: Rose A water level exceeded maximum (15). Excess water (9 units) drained.
+[12:06:15] WARNING: Tomato 1 water level exceeded maximum (22). Excess water (7 units) drained.
+[12:06:15] WARNING: Herb Patch water level exceeded maximum (12). Excess water (10 units) drained.
+[12:06:15] WARNING: Desert King water level exceeded maximum (3). Excess water (13 units) drained.
+[12:06:15] WARNING: Sun Glory water level exceeded maximum (18). Excess water (8 units) drained.
+[12:06:15] WARNING: Gold Corn water level exceeded maximum (30). Excess water (4 units) drained.
+[12:06:15] WARNING: Tulip Field water level exceeded maximum (15). Excess water (9 units) drained.
+[12:06:15] AUTOMATION: Drainage opened for Rose A (-4 units)
+[12:06:15] AUTOMATION: Drainage opened for Tomato 1 (-5 units)
+[12:06:15] AUTOMATION: Drainage opened for Herb Patch (-4 units)
+[12:06:15] AUTOMATION: Drainage opened for Desert King (-1 units)
+[12:06:15] AUTOMATION: Drainage opened for Sun Glory (-5 units)
+[12:06:15] AUTOMATION: Drainage opened for Gold Corn (-5 units)
+[12:06:15] AUTOMATION: Drainage opened for Tulip Field (-4 units)
+[12:06:15] [INFO][Monitor] Heartbeat day=3 plants=7 alive=7
+[12:06:25] --- STARTING DAY 4 ---
+[12:06:25] EVENT: Temperature changed to 88F.
+[12:06:25] WEATHER: Sunny day.
+[12:06:25] [INFO][Monitor] Heartbeat day=4 plants=7 alive=7
+[12:06:35] --- STARTING DAY 5 ---
+[12:06:35] EVENT: Temperature changed to 84F.
+[12:06:35] WEATHER: Sunny day.
+[12:06:35] [INFO][Monitor] Heartbeat day=5 plants=7 alive=7
+[12:06:45] --- STARTING DAY 6 ---
+[12:06:45] EVENT: Temperature changed to 105F.
+[12:06:45] AUTOMATION: Misting fans activated. Cooling garden.
+[12:06:45] WARNING: Rose A hurting from temp (105F).
+[12:06:45] WARNING: Tomato 1 hurting from temp (105F).
+[12:06:45] WARNING: Herb Patch hurting from temp (105F).
+[12:06:45] WARNING: Desert King hurting from temp (105F).
+[12:06:45] WARNING: Sun Glory hurting from temp (105F).
+[12:06:45] WARNING: Gold Corn hurting from temp (105F).
+[12:06:45] WARNING: Tulip Field hurting from temp (105F).
+[12:06:45] WEATHER: Sunny day.
+[12:06:45] [INFO][Monitor] Heartbeat day=6 plants=7 alive=7
+[12:06:55] --- STARTING DAY 7 ---
+[12:06:55] EVENT: Temperature changed to 42F.
+[12:06:55] AUTOMATION: Heater activated. Warming garden.
+[12:06:55] WEATHER: Sunny day.
+[12:06:55] EVENT: Parasite 'aphids' detected.
+[12:06:55] ACTION: Rose A healed by 10 points. Health: 100%
+[12:06:55] ACTION: Tulip Field healed by 10 points. Health: 100%
+[12:06:55] AUTOMATION: Pesticide deployed for aphids
+[12:06:55] WARNING: Rose A (Rose) attacked by aphids! Health: 70
+[12:06:55] INFO: Tomato 1 is immune to aphids.
+[12:06:55] INFO: Herb Patch is immune to aphids.
+[12:06:55] INFO: Desert King is immune to aphids.
+[12:06:55] INFO: Sun Glory is immune to aphids.
+[12:06:55] INFO: Gold Corn is immune to aphids.
+[12:06:55] WARNING: Tulip Field (Tulip) attacked by aphids! Health: 70
+[12:06:55] [INFO][Monitor] Heartbeat day=7 plants=7 alive=7
+[12:07:05] --- STARTING DAY 8 ---
+[12:07:05] EVENT: Temperature changed to 70F.
+[12:07:05] EVENT: Raining 5 units.
+[12:07:05] WARNING: Rose A water level exceeded maximum (15). Excess water (1 units) drained.
+[12:07:05] WARNING: Herb Patch water level exceeded maximum (12). Excess water (1 units) drained.
+[12:07:05] WARNING: Desert King water level exceeded maximum (3). Excess water (4 units) drained.
+[12:07:05] WARNING: Tulip Field water level exceeded maximum (15). Excess water (1 units) drained.
+[12:07:05] AUTOMATION: Drainage opened for Rose A (-4 units)
+[12:07:05] AUTOMATION: Drainage opened for Tomato 1 (-5 units)
+[12:07:05] AUTOMATION: Drainage opened for Herb Patch (-4 units)
+[12:07:05] AUTOMATION: Drainage opened for Desert King (-1 units)
+[12:07:05] AUTOMATION: Drainage opened for Sun Glory (-5 units)
+[12:07:05] AUTOMATION: Drainage opened for Gold Corn (-5 units)
+[12:07:05] AUTOMATION: Drainage opened for Tulip Field (-4 units)
+[12:07:05] [INFO][Monitor] Heartbeat day=8 plants=7 alive=7
+[12:07:15] --- STARTING DAY 9 ---
+[12:07:15] EVENT: Temperature changed to 63F.
+[12:07:15] WEATHER: Sunny day.
+[12:07:15] [INFO][Monitor] Heartbeat day=9 plants=7 alive=7
+[12:07:17] ACTION: Tulip Field healed by 20 points. Health: 90%
+[12:07:17] WARNING: Tulip Field water level exceeded maximum (15). Excess water (1 units) drained.
+[12:07:17] ACTION: Tulip Field excess water (4 units) removed to maintain health.
+[12:07:17] ACTION: Applied fertilizer to Tulip Field. Health improved!
+[12:07:25] --- STARTING DAY 10 ---
+[12:07:25] EVENT: Temperature changed to 76F.
+[12:07:25] WEATHER: Sunny day.
+[12:07:25] [INFO][Monitor] Heartbeat day=10 plants=7 alive=7
+[12:07:27] AUTO: Simulation loop stopped.

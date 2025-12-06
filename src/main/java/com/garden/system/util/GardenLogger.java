@@ -12,6 +12,10 @@ public class GardenLogger {
     // A 'listener' that the UI can hook into
     private static Consumer<String> uiCallback;
 
+    public static void logEvent(String level, String module, String message) {
+        log("[" + level + "][" + module + "] " + message);
+    }
+
     public static void setUiCallback(Consumer<String> callback) {
         uiCallback = callback;
     }
@@ -37,4 +41,3 @@ public class GardenLogger {
         }
     }
 }
-
