@@ -1,6 +1,13 @@
-package garden_system;
+package com.garden.system.api;
 
-import java.util.*;
+import com.garden.system.manager.GardenManager;
+import com.garden.system.model.Plant;
+import com.garden.system.ui.GardenApp;
+import com.garden.system.util.GardenLogger;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public class GertenSimulationAPI {
 
@@ -48,3 +55,4 @@ public class GertenSimulationAPI {
         );
     }
 }
+

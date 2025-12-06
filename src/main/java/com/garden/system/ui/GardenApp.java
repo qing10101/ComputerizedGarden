@@ -1,5 +1,9 @@
-package garden_system;
+package com.garden.system.ui;
 
+import com.garden.system.api.GertenSimulationAPI;
+import com.garden.system.manager.GardenManager;
+import com.garden.system.model.Plant;
+import com.garden.system.util.GardenLogger;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
@@ -248,13 +252,22 @@ public class GardenApp extends Application {
         else if (p.getHealth() > 30) healthBar.getStyleClass().add("health-bar-med");
         else healthBar.getStyleClass().add("health-bar-low");
 
-        Label detail = new Label("Health: " + p.getHealth() + "%\nWater: " + p.getCurrentWaterLevel() + "/" + p.getWaterRequirement());
+        // Show pest status if infested
+        String statusText = "Health: " + p.getHealth() + "%\nWater: " + p.getCurrentWaterLevel() + "/" + p.getWaterRequirement();
+        if (p.hasPest()) {
+            statusText += "\n⚠️ Infested: " + p.getCurrentPest();
+        }
+        Label detail = new Label(statusText);
         detail.getStyleClass().add("status-text");
 
         if (!p.isAlive()) {
             card.setStyle("-fx-background-color: #cfd8dc; -fx-opacity: 0.7; -fx-background-radius: 15;");
             icon.setText("💀");
             name.setText(p.getName() + " (Dead)");
+        } else {
+            // Add click handler for alive plants
+            card.setOnMouseClicked(e -> showPlantActionsDialog(p));
+            card.setStyle("-fx-cursor: hand;"); // Show hand cursor on hover
         }
 
         card.getChildren().addAll(icon, name, typeLbl, healthBar, detail);
@@ -275,7 +288,95 @@ public class GardenApp extends Application {
         }
     }
 
+    // --- Plant Action Dialog ---
+    private static void showPlantActionsDialog(Plant plant) {
+        if (!plant.isAlive()) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Plant Status");
+            alert.setHeaderText(plant.getName() + " is Dead");
+            alert.setContentText("This plant has died and cannot be treated.");
+            alert.showAndWait();
+            return;
+        }
+
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.setTitle("Plant Care Actions");
+        dialog.setHeaderText("Care for: " + plant.getName() + " (" + plant.getType() + ")");
+        
+        // Create action buttons
+        VBox buttonBox = new VBox(10);
+        buttonBox.setPadding(new Insets(20));
+        buttonBox.setSpacing(10);
+
+        GardenManager manager = GardenManager.getInstance();
+
+        // Remove Pest button (only if infested)
+        if (plant.hasPest()) {
+            Button removePestBtn = new Button("🐛 Remove Pest (" + plant.getCurrentPest() + ")");
+            removePestBtn.setStyle("-fx-background-color: #ff9800; -fx-text-fill: white; -fx-font-weight: bold; -fx-pref-width: 250px;");
+            removePestBtn.setOnAction(e -> {
+                manager.removePestFromPlant(plant.getName());
+                refreshUI();
+                dialog.close();
+            });
+            buttonBox.getChildren().add(removePestBtn);
+        }
+
+        // Water Plant button
+        Button waterBtn = new Button("💧 Water Plant (+10)");
+        waterBtn.setStyle("-fx-background-color: #2196f3; -fx-text-fill: white; -fx-font-weight: bold; -fx-pref-width: 250px;");
+        waterBtn.setOnAction(e -> {
+            manager.waterPlant(plant.getName(), 10);
+            refreshUI();
+            dialog.close();
+        });
+        buttonBox.getChildren().add(waterBtn);
+
+        // Heal Plant button
+        Button healBtn = new Button("💚 Heal Plant (+20 HP)");
+        healBtn.setStyle("-fx-background-color: #4caf50; -fx-text-fill: white; -fx-font-weight: bold; -fx-pref-width: 250px;");
+        healBtn.setOnAction(e -> {
+            manager.healPlant(plant.getName(), 20);
+            refreshUI();
+            dialog.close();
+        });
+        buttonBox.getChildren().add(healBtn);
+
+        // Apply Fertilizer button
+        Button fertilizerBtn = new Button("🌿 Apply Fertilizer");
+        fertilizerBtn.setStyle("-fx-background-color: #8bc34a; -fx-text-fill: white; -fx-font-weight: bold; -fx-pref-width: 250px;");
+        fertilizerBtn.setOnAction(e -> {
+            manager.applyFertilizerToPlant(plant.getName());
+            refreshUI();
+            dialog.close();
+        });
+        buttonBox.getChildren().add(fertilizerBtn);
+
+        // Emergency Treatment button (only if health is low)
+        if (plant.getHealth() < 50) {
+            Button emergencyBtn = new Button("🚑 Emergency Treatment");
+            emergencyBtn.setStyle("-fx-background-color: #f44336; -fx-text-fill: white; -fx-font-weight: bold; -fx-pref-width: 250px;");
+            emergencyBtn.setOnAction(e -> {
+                manager.emergencyTreatmentForPlant(plant.getName());
+                refreshUI();
+                dialog.close();
+            });
+            buttonBox.getChildren().add(emergencyBtn);
+        }
+
+        // Close button
+        Button closeBtn = new Button("Close");
+        closeBtn.setStyle("-fx-pref-width: 250px;");
+        closeBtn.setOnAction(e -> dialog.close());
+        buttonBox.getChildren().add(closeBtn);
+
+        dialog.getDialogPane().setContent(buttonBox);
+        dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
+        dialog.showAndWait();
+    }
+
     public static void main(String[] args) {
         launch(args);
     }
 }
+

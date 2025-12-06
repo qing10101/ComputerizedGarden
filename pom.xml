@@ -43,7 +43,7 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.8</version>
                 <configuration>
-                    <mainClass>garden_system.GardenSystemApp</mainClass>
+                    <mainClass>com.garden.system/com.garden.system.ui.GardenApp</mainClass>
                 </configuration>
             </plugin>
         </plugins>

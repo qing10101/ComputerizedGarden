@@ -1,51 +1,10 @@
-package garden_system;
+package com.garden.system.manager;
 
-import java.util.*;
+import com.garden.system.model.Plant;
+import com.garden.system.util.GardenLogger;
 
-// Module 1: Hydration System
-class HydrationSystem {
-    public void regulate(List<Plant> plants) {
-        for (Plant p : plants) {
-            if (!p.isAlive()) continue;
-
-            if (p.getCurrentWaterLevel() < p.getWaterRequirement()) {
-                GardenLogger.log("AUTOMATION: Sprinklers activated for " + p.getName());
-                p.adjustWater(5);
-            } else if (p.getCurrentWaterLevel() > p.getWaterRequirement() + 10) {
-                GardenLogger.log("AUTOMATION: Drainage opened for " + p.getName());
-                p.adjustWater(-5);
-            }
-        }
-    }
-}
-
-// Module 2: Climate Control System (Heating/Cooling)
-class ClimateControlSystem {
-    public void regulate(int currentTemp) {
-        if (currentTemp < 50) {
-            GardenLogger.log("AUTOMATION: Heater activated. Warming garden.");
-        } else if (currentTemp > 90) {
-            GardenLogger.log("AUTOMATION: Misting fans activated. Cooling garden.");
-        }
-    }
-}
-
-// Module 3: Pest Defense System
-class PestDefenseSystem {
-    public void deployDefense(String detectedPest, List<Plant> plants) {
-        boolean threadDetected = false;
-        for(Plant p : plants) {
-            if(p.isAlive() && p.getVulnerableTo().contains(detectedPest)) {
-                threadDetected = true;
-                // Heal the plant slightly as we deploy countermeasures
-                p.heal(10);
-            }
-        }
-        if(threadDetected) {
-            GardenLogger.log("AUTOMATION: Pesticide deployed for " + detectedPest);
-        }
-    }
-}
+import java.util.ArrayList;
+import java.util.List;
 
 public class GardenManager {
     private static GardenManager instance;
@@ -106,4 +65,59 @@ public class GardenManager {
             if (p.isAlive()) p.attack(pestName);
         }
     }
+
+    // Manual intervention methods for individual plants
+    public Plant findPlantByName(String name) {
+        for (Plant p : gardenPlants) {
+            if (p.getName().equals(name)) {
+                return p;
+            }
+        }
+        return null;
+    }
+
+    public boolean removePestFromPlant(String plantName) {
+        Plant plant = findPlantByName(plantName);
+        if (plant != null && plant.isAlive()) {
+            return plant.removePest();
+        }
+        return false;
+    }
+
+    public boolean waterPlant(String plantName, int amount) {
+        Plant plant = findPlantByName(plantName);
+        if (plant != null && plant.isAlive()) {
+            plant.manualWater(amount);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean healPlant(String plantName, int amount) {
+        Plant plant = findPlantByName(plantName);
+        if (plant != null && plant.isAlive()) {
+            plant.heal(amount);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean applyFertilizerToPlant(String plantName) {
+        Plant plant = findPlantByName(plantName);
+        if (plant != null && plant.isAlive()) {
+            plant.applyFertilizer();
+            return true;
+        }
+        return false;
+    }
+
+    public boolean emergencyTreatmentForPlant(String plantName) {
+        Plant plant = findPlantByName(plantName);
+        if (plant != null && plant.isAlive()) {
+            plant.emergencyTreatment();
+            return true;
+        }
+        return false;
+    }
 }
+

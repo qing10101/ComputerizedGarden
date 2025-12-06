@@ -1,4 +1,4 @@
-package garden_system;
+package com.garden.system.util;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -37,3 +37,4 @@ public class GardenLogger {
         }
     }
 }
+
