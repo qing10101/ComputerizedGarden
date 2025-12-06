@@ -39,6 +39,10 @@ public class GardenManager {
         return gardenPlants;
     }
 
+    public long getAliveCount() {
+        return gardenPlants.stream().filter(Plant::isAlive).count();
+    }
+
     // --- Simulation Interaction Methods ---
 
     public void handleRain(int amount) {
@@ -120,4 +124,3 @@ public class GardenManager {
         return false;
     }
 }
-

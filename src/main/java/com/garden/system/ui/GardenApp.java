@@ -4,6 +4,8 @@ import com.garden.system.api.GertenSimulationAPI;
 import com.garden.system.manager.GardenManager;
 import com.garden.system.model.Plant;
 import com.garden.system.util.GardenLogger;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
@@ -13,6 +15,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.util.Arrays;
 import java.util.List;
@@ -27,6 +30,7 @@ public class GardenApp extends Application {
 
     private final GertenSimulationAPI api = new GertenSimulationAPI();
     private final Random random = new Random();
+    private Timeline autoSimulation;
 
     @Override
     public void start(Stage primaryStage) {
@@ -101,6 +105,9 @@ public class GardenApp extends Application {
 
         // Initial Log
         GardenLogger.log("SYSTEM STARTUP: Ready for simulation.");
+
+        // Seed garden with sample plants for demo readiness
+        api.initializeGarden();
     }
 
     // --- Sidebar ---
@@ -170,6 +177,18 @@ public class GardenApp extends Application {
         btnSimulate.setStyle("-fx-background-color: #673ab7; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px;");
         btnSimulate.setOnAction(e -> simulateDayCycle());
 
+        ToggleButton autoBtn = new ToggleButton("⏱ Auto Run");
+        autoBtn.setStyle("-fx-background-color: #455a64; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px;");
+        autoBtn.setOnAction(e -> {
+            if (autoBtn.isSelected()) {
+                startAutoSimulation();
+                autoBtn.setText("⏹ Stop Auto");
+            } else {
+                stopAutoSimulation();
+                autoBtn.setText("⏱ Auto Run");
+            }
+        });
+
         Button btnRain = createStyledButton("🌧 Rain", "btn-rain");
         btnRain.setOnAction(e -> api.rain(10));
 
@@ -179,7 +198,7 @@ public class GardenApp extends Application {
         Button btnPest = createStyledButton("🐛 Pest", "btn-pest");
         btnPest.setOnAction(e -> api.parasite("aphids"));
 
-        controls.getChildren().addAll(btnSimulate, new Separator(), btnRain, btnHot, btnPest);
+        controls.getChildren().addAll(btnSimulate, autoBtn, new Separator(), btnRain, btnHot, btnPest);
         return controls;
     }
 
@@ -211,6 +230,25 @@ public class GardenApp extends Application {
         }
 
         refreshUI();
+        api.heartbeat(dayCount);
+    }
+
+    private void startAutoSimulation() {
+        if (autoSimulation != null) {
+            autoSimulation.stop();
+        }
+        autoSimulation = new Timeline(new KeyFrame(Duration.seconds(10), e -> simulateDayCycle()));
+        autoSimulation.setCycleCount(Timeline.INDEFINITE);
+        autoSimulation.play();
+        GardenLogger.log("AUTO: Simulation loop started (every 10s).");
+    }
+
+    private void stopAutoSimulation() {
+        if (autoSimulation != null) {
+            autoSimulation.stop();
+            autoSimulation = null;
+            GardenLogger.log("AUTO: Simulation loop stopped.");
+        }
     }
 
     // --- Render Cards ---
