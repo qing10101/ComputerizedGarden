@@ -1,0 +1,23 @@
+package com.garden.system.device;
+
+import com.garden.system.util.GardenLogger;
+
+public class Heater {
+    private boolean on;
+
+    public void on(int temp) {
+        if (!on) {
+            GardenLogger.logEvent("INFO", "Device", "Heater ON temp=" + temp + "F");
+        }
+        on = true;
+    }
+
+    public void off() {
+        if (on) {
+            GardenLogger.logEvent("INFO", "Device", "Heater OFF");
+        }
+        on = false;
+    }
+
+    public boolean isOn() { return on; }
+}

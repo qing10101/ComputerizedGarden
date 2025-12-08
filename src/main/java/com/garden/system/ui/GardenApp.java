@@ -253,6 +253,10 @@ public class GardenApp extends Application {
 
     // --- Render Cards ---
     public static void refreshUI() {
+        // Allow headless API calls to no-op safely before UI is ready
+        if (gardenGrid == null) {
+            return;
+        }
         Platform.runLater(() -> {
             gardenGrid.getChildren().clear();
             List<Plant> plants = GardenManager.getInstance().getPlants();

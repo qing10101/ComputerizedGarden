@@ -1,0 +1,11 @@
+{
+  "plants": [
+    { "name": "Rose A",      "type": "Rose",      "waterRequirement": 10, "pests": ["aphids", "beetles"] },
+    { "name": "Tomato 1",    "type": "Tomato",    "waterRequirement": 15, "pests": ["worms", "blight"] },
+    { "name": "Herb Patch",  "type": "Basil",     "waterRequirement": 8,  "pests": ["slugs"] },
+    { "name": "Desert King", "type": "Cactus",    "waterRequirement": 2,  "pests": ["rot"] },
+    { "name": "Sun Glory",   "type": "Sunflower", "waterRequirement": 12, "pests": ["birds"] },
+    { "name": "Gold Corn",   "type": "Corn",      "waterRequirement": 20, "pests": ["locusts"] },
+    { "name": "Tulip Field", "type": "Tulip",     "waterRequirement": 10, "pests": ["aphids"] }
+  ]
+}
