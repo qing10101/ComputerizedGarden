@@ -115,6 +115,9 @@ public class GertenSimulationAPI {
 
     public void heartbeat(int dayCount) {
         try {
+            // Periodic check and regulation of water levels
+            manager.checkAndRegulate();
+            GardenApp.refreshUI();
             monitoringService.heartbeat(dayCount);
         } catch (Exception e) {
             GardenLogger.logEvent("ERROR", "Monitor", "heartbeat failed: " + e.getMessage());

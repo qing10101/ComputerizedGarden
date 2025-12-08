@@ -20,22 +20,21 @@ public class HydrationSystem {
 
             int currentWater = p.getCurrentWaterLevel();
             int requirement = p.getWaterRequirement();
-            int maxWater = (int)(requirement * 1.5); // Maximum water level (150% of requirement)
             int optimalRange = requirement / 10; // 10% tolerance
             int lowerBound = requirement - optimalRange;
             int upperBound = requirement + optimalRange;
 
             if (currentWater < lowerBound) {
-                // Too little water
-                int needed = Math.min(5, lowerBound - currentWater);
+                // Too little water - add water completely to optimal range
+                int needed = lowerBound - currentWater;
+                GardenLogger.log("AUTOMATION: Sprinkler activated for " + p.getName() + " (+" + needed + " units)");
                 sprinkler.activate(p.getName(), needed);
                 p.adjustWater(needed);
             } else if (currentWater > upperBound) {
-                // Too much water - drain excess
+                // Too much water - drain excess completely to optimal range
                 int excess = currentWater - upperBound;
-                int drainAmount = Math.min(5, excess);
-                GardenLogger.log("AUTOMATION: Drainage opened for " + p.getName() + " (-" + drainAmount + " units)");
-                p.adjustWater(-drainAmount);
+                GardenLogger.log("AUTOMATION: Drainage opened for " + p.getName() + " (-" + excess + " units)");
+                p.adjustWater(-excess);
                 sprinkler.deactivate();
             } else {
                 sprinkler.deactivate();

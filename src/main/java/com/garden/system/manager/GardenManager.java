@@ -9,6 +9,7 @@ import java.util.List;
 public class GardenManager {
     private static GardenManager instance;
     private List<Plant> gardenPlants;
+    private int currentTemperature = 70; // Default temperature
 
     // Subsystems
     private HydrationSystem hydrationSystem;
@@ -56,10 +57,14 @@ public class GardenManager {
 
     public void handleTemperature(int temp) {
         GardenLogger.log("EVENT: Temperature changed to " + temp + "F.");
+        currentTemperature = temp;
         climateSystem.regulate(temp); // Automation handles environment
+        // Apply temperature effects to plants based on actual regulated temperature
+        int effectiveTemp = climateSystem.getEffectiveTemperature(temp);
         for (Plant p : gardenPlants) {
-            if (p.isAlive()) p.updateTemperatureReaction(temp);
+            if (p.isAlive()) p.updateTemperatureReaction(effectiveTemp);
         }
+        currentTemperature = effectiveTemp; // Update to effective temperature after regulation
     }
 
     public void handleParasite(String pestName) {
@@ -70,10 +75,38 @@ public class GardenManager {
         }
     }
 
+    // --- Periodic Maintenance ---
+    public void checkAndRegulate() {
+        // Automatically check and regulate water levels for all plants
+        hydrationSystem.regulate(gardenPlants);
+        // Automatically check and regulate temperature
+        climateSystem.regulate(currentTemperature);
+        // Update effective temperature and apply to plants
+        int effectiveTemp = climateSystem.getEffectiveTemperature(currentTemperature);
+        if (effectiveTemp != currentTemperature) {
+            currentTemperature = effectiveTemp;
+            for (Plant p : gardenPlants) {
+                if (p.isAlive()) p.updateTemperatureReaction(effectiveTemp);
+            }
+        }
+    }
+
+    public int getCurrentTemperature() {
+        return currentTemperature;
+    }
+
     // --- Manual Device Controls (Updated) ---
 
     public void activateHeater() {
         climateSystem.turnHeaterOn();
+        // Update temperature when manually controlling devices
+        int effectiveTemp = climateSystem.getEffectiveTemperature(currentTemperature);
+        if (effectiveTemp != currentTemperature) {
+            currentTemperature = effectiveTemp;
+            for (Plant p : gardenPlants) {
+                if (p.isAlive()) p.updateTemperatureReaction(effectiveTemp);
+            }
+        }
     }
 
     public void deactivateHeater() {
@@ -82,6 +115,14 @@ public class GardenManager {
 
     public void activateCooler() {
         climateSystem.turnCoolerOn();
+        // Update temperature when manually controlling devices
+        int effectiveTemp = climateSystem.getEffectiveTemperature(currentTemperature);
+        if (effectiveTemp != currentTemperature) {
+            currentTemperature = effectiveTemp;
+            for (Plant p : gardenPlants) {
+                if (p.isAlive()) p.updateTemperatureReaction(effectiveTemp);
+            }
+        }
     }
 
     public void deactivateCooler() {
