@@ -27,4 +27,28 @@ public class ClimateControlSystem {
             cooler.off();
         }
     }
+
+    // --- New Manual Control Methods ---
+
+    public void turnHeaterOn() {
+        heater.on(70); // Manual override acts as if temp is 70
+        cooler.off();
+        GardenLogger.log("MANUAL: Heater forced ON by user.");
+    }
+
+    public void turnHeaterOff() {
+        heater.off();
+        GardenLogger.log("MANUAL: Heater forced OFF by user.");
+    }
+
+    public void turnCoolerOn() {
+        cooler.on(70); // Manual override acts as if temp is 70
+        heater.off();
+        GardenLogger.log("MANUAL: Cooler forced ON by user.");
+    }
+
+    public void turnCoolerOff() {
+        cooler.off();
+        GardenLogger.log("MANUAL: Cooler forced OFF by user.");
+    }
 }

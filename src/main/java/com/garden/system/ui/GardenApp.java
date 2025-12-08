@@ -173,12 +173,13 @@ public class GardenApp extends Application {
         controls.setAlignment(Pos.CENTER);
         controls.setPadding(new Insets(15, 0, 0, 0));
 
-        Button btnSimulate = new Button("🌞 Simulate Full Day");
-        btnSimulate.setStyle("-fx-background-color: #673ab7; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px;");
+        // 1. Simulation Controls
+        Button btnSimulate = new Button("🌞 Simulate Day");
+        btnSimulate.setStyle("-fx-background-color: #673ab7; -fx-text-fill: white; -fx-font-weight: bold;");
         btnSimulate.setOnAction(e -> simulateDayCycle());
 
         ToggleButton autoBtn = new ToggleButton("⏱ Auto Run");
-        autoBtn.setStyle("-fx-background-color: #455a64; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px;");
+        autoBtn.setStyle("-fx-background-color: #455a64; -fx-text-fill: white; -fx-font-weight: bold;");
         autoBtn.setOnAction(e -> {
             if (autoBtn.isSelected()) {
                 startAutoSimulation();
@@ -189,16 +190,53 @@ public class GardenApp extends Application {
             }
         });
 
+        Separator sep1 = new Separator(Orientation.VERTICAL);
+
+        // 2. Environment Triggers
         Button btnRain = createStyledButton("🌧 Rain", "btn-rain");
         btnRain.setOnAction(e -> api.rain(10));
 
-        Button btnHot = createStyledButton("🔥 Heat", "btn-sun");
+        Button btnHot = createStyledButton("🔥 Heat Wave", "btn-sun");
         btnHot.setOnAction(e -> api.temperature(105));
 
         Button btnPest = createStyledButton("🐛 Pest", "btn-pest");
         btnPest.setOnAction(e -> api.parasite("aphids"));
 
-        controls.getChildren().addAll(btnSimulate, autoBtn, new Separator(), btnRain, btnHot, btnPest);
+        Separator sep2 = new Separator(Orientation.VERTICAL);
+
+        // 3. Manual Device Controls (Grouped for Layout)
+
+        // Heater Group
+        Button btnHeaterOn = new Button("Heater ON");
+        btnHeaterOn.setStyle("-fx-background-color: #d84315; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 10px;");
+        btnHeaterOn.setOnAction(e -> GardenManager.getInstance().activateHeater());
+
+        Button btnHeaterOff = new Button("Heater OFF");
+        btnHeaterOff.setStyle("-fx-background-color: #5d4037; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 10px;");
+        btnHeaterOff.setOnAction(e -> GardenManager.getInstance().deactivateHeater());
+
+        VBox heaterGroup = new VBox(2, btnHeaterOn, btnHeaterOff);
+        heaterGroup.setAlignment(Pos.CENTER);
+
+        // Cooler Group
+        Button btnCoolerOn = new Button("Cooler ON");
+        btnCoolerOn.setStyle("-fx-background-color: #0277bd; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 10px;");
+        btnCoolerOn.setOnAction(e -> GardenManager.getInstance().activateCooler());
+
+        Button btnCoolerOff = new Button("Cooler OFF");
+        btnCoolerOff.setStyle("-fx-background-color: #37474f; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 10px;");
+        btnCoolerOff.setOnAction(e -> GardenManager.getInstance().deactivateCooler());
+
+        VBox coolerGroup = new VBox(2, btnCoolerOn, btnCoolerOff);
+        coolerGroup.setAlignment(Pos.CENTER);
+
+        controls.getChildren().addAll(
+                btnSimulate, autoBtn,
+                sep1,
+                btnRain, btnHot, btnPest,
+                sep2,
+                heaterGroup, coolerGroup
+        );
         return controls;
     }
 
@@ -344,7 +382,7 @@ public class GardenApp extends Application {
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.setTitle("Plant Care Actions");
         dialog.setHeaderText("Care for: " + plant.getName() + " (" + plant.getType() + ")");
-        
+
         // Create action buttons
         VBox buttonBox = new VBox(10);
         buttonBox.setPadding(new Insets(20));

@@ -70,7 +70,25 @@ public class GardenManager {
         }
     }
 
-    // Manual intervention methods for individual plants
+    // --- Manual Device Controls (Updated) ---
+
+    public void activateHeater() {
+        climateSystem.turnHeaterOn();
+    }
+
+    public void deactivateHeater() {
+        climateSystem.turnHeaterOff();
+    }
+
+    public void activateCooler() {
+        climateSystem.turnCoolerOn();
+    }
+
+    public void deactivateCooler() {
+        climateSystem.turnCoolerOff();
+    }
+
+    // --- Manual intervention methods for individual plants ---
     public Plant findPlantByName(String name) {
         for (Plant p : gardenPlants) {
             if (p.getName().equals(name)) {
