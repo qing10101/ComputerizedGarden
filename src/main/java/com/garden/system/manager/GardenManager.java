@@ -49,14 +49,18 @@ public class GardenManager {
      * Called once per day cycle to simulate base metabolism.
      */
     public void performDailyMaintenance() {
-        GardenLogger.log("MAINTENANCE: Daily base metabolism (-1 water) applied.");
+        // 1. Apply Water Loss
         for (Plant p : gardenPlants) {
             if (p.isAlive()) {
-                p.adjustWater(-1); // Decrease water by 1
+                p.adjustWater(-1);
             }
         }
-        // After evaporation, check if we need to auto-water immediately
-        hydrationSystem.regulate(gardenPlants);
+        // GardenLogger.log("MAINTENANCE: Daily water evaporation (-1) applied.");
+
+        // 2. Trigger Automation
+        // Note: With the new HydrationSystem tolerance, this won't refill immediately
+        // unless the water is CRITICALLY low.
+        checkAndRegulate();
     }
 
     public void handleRain(int amount) {
@@ -65,22 +69,23 @@ public class GardenManager {
             if (p.isAlive()) p.adjustWater(amount);
         }
         // Trigger automation to fix over-watering immediately
-        hydrationSystem.regulate(gardenPlants);
+        checkAndRegulate();
     }
 
-    public void handleDrought(int amount) {
-        GardenLogger.log("EVENT: Drought! Water level decreased by " + amount + " units.");
+    public void handleDrought(int intensity) {
+        GardenLogger.log("EVENT: Drought condition! Water levels dropping by " + intensity + " units.");
         for (Plant p : gardenPlants) {
-            if (p.isAlive()) p.adjustWater(-amount);
+            if (p.isAlive()) {
+                p.adjustWater(-intensity);
+            }
         }
-        // Trigger automation to fix under-watering immediately
-        hydrationSystem.regulate(gardenPlants);
+        checkAndRegulate();
     }
 
     public void handleTemperature(int temp) {
         GardenLogger.log("EVENT: Temperature changed to " + temp + "F.");
 
-        // --- NEW: Calculate Evaporation based on Heat ---
+        // --- Calculate Evaporation based on Heat ---
         int evaporation = 0;
         if (temp >= 100) {
             evaporation = 3; // Extreme heat burns water fast
@@ -94,30 +99,30 @@ public class GardenManager {
             GardenLogger.log("ENVIRONMENT: Heat (" + temp + "F) caused extra evaporation (-" + evaporation + " water).");
         }
 
-        climateSystem.regulate(temp); // Automation handles environment
+        climateSystem.regulate(temp);
 
         for (Plant p : gardenPlants) {
             if (p.isAlive()) {
                 p.updateTemperatureReaction(temp);
-                // Apply heat-based evaporation
                 if (evaporation > 0) {
                     p.adjustWater(-evaporation);
                 }
             }
         }
 
-        // Trigger automation to check if plants need water after evaporation
-        hydrationSystem.regulate(gardenPlants);
+        checkAndRegulate();
     }
 
     public void handleParasite(String pestName) {
         GardenLogger.log("EVENT: Parasite '" + pestName + "' detected.");
-        // First, let pests attack plants
+        pestSystem.deployDefense(pestName, gardenPlants);
         for (Plant p : gardenPlants) {
             if (p.isAlive()) p.attack(pestName);
         }
-        // Then deploy defense system to fight back
-        pestSystem.deployDefense(pestName, gardenPlants);
+    }
+
+    public void checkAndRegulate() {
+        hydrationSystem.regulate(gardenPlants);
     }
 
     // --- Manual Device Controls ---

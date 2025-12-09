@@ -13,28 +13,47 @@ public class HydrationSystem {
     private final MoistureSensor sensor = new MoistureSensor();
 
     public void regulate(List<Plant> plants) {
-        int avgMoisture = sensor.readAverageMoisture(plants);
-        GardenLogger.logEvent("INFO", "Sensor", "Moisture average=" + avgMoisture);
+        // sensor.readAverageMoisture(plants); // Optional logging
+
         for (Plant p : plants) {
             if (!p.isAlive()) continue;
 
             int currentWater = p.getCurrentWaterLevel();
             int requirement = p.getWaterRequirement();
 
-            if (currentWater < requirement) {
-                // Too little water - directly adjust to ideal value
+            int tolerance = (int) (requirement * 0.4);
+            if (tolerance < 2) tolerance = 2;
+
+            int lowerBound = requirement - tolerance;
+
+            // --- FIX FOR SMALL PLANTS (Cactus) ---
+            // If requirement is small (e.g. 2), lowerBound might be <= 0.
+            // If lowerBound is <= 0, the sprinkler never triggers because water can't go below 0.
+            // We force a minimum trigger point of 1 for any plant that needs water.
+            if (lowerBound < 1 && requirement > 0) {
+                lowerBound = 1;
+            }
+
+            int upperBound = requirement + tolerance;
+
+            if (currentWater < lowerBound) {
+                // Activate Sprinklers
                 int needed = requirement - currentWater;
-                GardenLogger.log("AUTOMATION: Sprinkler activated for " + p.getName() + ". Water adjusted from " + currentWater + " to " + requirement + " (+" + needed + " units).");
-                sprinkler.activate(p.getName(), needed);
-                p.adjustWater(needed);
-            } else if (currentWater > requirement) {
-                // Too much water - directly adjust to ideal value
-                int excess = currentWater - requirement;
-                GardenLogger.log("AUTOMATION: Drainage opened for " + p.getName() + ". Water adjusted from " + currentWater + " to " + requirement + " (-" + excess + " units).");
-                p.adjustWater(-excess);
+                int flow = Math.min(5, needed);
+
+                sprinkler.activate(p.getName(), flow);
+                p.adjustWater(flow);
+
+            } else if (currentWater > upperBound) {
+                // Open Drainage
+                int excess = currentWater - upperBound;
+                int drainAmount = Math.min(5, excess);
+
+                GardenLogger.log("AUTOMATION: Drainage opened for " + p.getName() + " (-" + drainAmount + " units)");
+                p.adjustWater(-drainAmount);
                 sprinkler.deactivate();
+
             } else {
-                // Water is at ideal value
                 sprinkler.deactivate();
             }
         }
