@@ -55,6 +55,15 @@ public class GardenManager {
         hydrationSystem.regulate(gardenPlants);
     }
 
+    public void handleDrought(int amount) {
+        GardenLogger.log("EVENT: Drought! Water level decreased by " + amount + " units.");
+        for (Plant p : gardenPlants) {
+            if (p.isAlive()) p.adjustWater(-amount);
+        }
+        // Trigger automation to fix under-watering immediately
+        hydrationSystem.regulate(gardenPlants);
+    }
+
     public void handleTemperature(int temp) {
         GardenLogger.log("EVENT: Temperature changed to " + temp + "F.");
         currentTemperature = temp;
@@ -69,10 +78,12 @@ public class GardenManager {
 
     public void handleParasite(String pestName) {
         GardenLogger.log("EVENT: Parasite '" + pestName + "' detected.");
-        pestSystem.deployDefense(pestName, gardenPlants); // Automation fights back
+        // First, let pests attack plants
         for (Plant p : gardenPlants) {
             if (p.isAlive()) p.attack(pestName);
         }
+        // Then deploy defense system to fight back
+        pestSystem.deployDefense(pestName, gardenPlants);
     }
 
     // --- Periodic Maintenance ---

@@ -96,6 +96,18 @@ public class GertenSimulationAPI {
         }
     }
 
+    public void drought(int amount) {
+        try {
+            int safeAmount = Math.max(0, Math.min(amount, 100)); // simple clamp
+            advanceClock();
+            GardenLogger.logEvent("INFO", "API", String.format("drought(%d)", safeAmount));
+            manager.handleDrought(safeAmount);
+            GardenApp.refreshUI();
+        } catch (Exception e) {
+            GardenLogger.logEvent("ERROR", "API", "drought failed: " + e.getMessage());
+        }
+    }
+
     public void getState() {
         try {
             GardenLogger.logEvent("INFO", "API", "getState()");
