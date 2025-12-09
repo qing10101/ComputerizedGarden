@@ -196,6 +196,9 @@ public class GardenApp extends Application {
         Button btnRain = createStyledButton("🌧 Rain", "btn-rain");
         btnRain.setOnAction(e -> api.rain(10));
 
+        Button btnDrought = createStyledButton("☀️ Drought", "btn-sun");
+        btnDrought.setOnAction(e -> api.drought(10));
+
         Button btnHot = createStyledButton("🔥 Heat Wave", "btn-sun");
         btnHot.setOnAction(e -> api.temperature(105));
 
@@ -233,7 +236,7 @@ public class GardenApp extends Application {
         controls.getChildren().addAll(
                 btnSimulate, autoBtn,
                 sep1,
-                btnRain, btnHot, btnPest,
+                btnRain, btnDrought, btnHot, btnPest,
                 sep2,
                 heaterGroup, coolerGroup
         );
@@ -261,11 +264,16 @@ public class GardenApp extends Application {
         if (random.nextInt(100) < 30) {
             int rain = 5 + random.nextInt(10);
             api.rain(rain);
+        } else if (random.nextInt(100) < 20) {
+            // Drought scenario - water loss due to evaporation
+            int drought = 5 + random.nextInt(10);
+            api.drought(drought);
         } else {
             GardenLogger.log("WEATHER: Sunny day.");
         }
 
-        if (random.nextInt(100) < 20) {
+        if (random.nextInt(100) < 60) {
+            // Increased pest chance for presentation (60% chance)
             String[] pests = {"aphids", "worms", "slugs", "rot", "locusts"};
             api.parasite(pests[random.nextInt(pests.length)]);
         }

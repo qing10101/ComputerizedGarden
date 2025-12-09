@@ -36,14 +36,7 @@ public class Plant {
         if (currentWaterLevel < 0) {
             currentWaterLevel = 0;
         }
-        
-        // Set maximum to waterRequirement * 1.5 (150% of requirement)
-        int maxWater = (int)(waterRequirement * 1.5);
-        if (currentWaterLevel > maxWater) {
-            int excess = currentWaterLevel - maxWater;
-            currentWaterLevel = maxWater;
-            GardenLogger.log("WARNING: " + name + " water level exceeded maximum (" + maxWater + "). Excess water (" + excess + " units) drained.");
-        }
+        // No maximum limit - let the regulation system handle it
     }
 
     public void attack(String parasite) {

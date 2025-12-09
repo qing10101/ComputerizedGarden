@@ -11,69 +11,52 @@ public class ClimateControlSystem {
     private final Cooler cooler = new Cooler();
     private final TempSensor sensor = new TempSensor();
     
-    // Optimal temperature range: 40-100F (plants get hurt outside this range)
-    private static final int MIN_SAFE_TEMP = 40;
-    private static final int MAX_SAFE_TEMP = 100;
-    private static final int TARGET_MIN_TEMP = 50; // Start heating below this
-    private static final int TARGET_MAX_TEMP = 90; // Start cooling above this
+    // Temperature thresholds: heat below 50F, cool above 90F
+    private static final int MIN_TEMP = 50; // Heat when below this
+    private static final int MAX_TEMP = 90; // Cool when above this
 
     public void regulate(int currentTemp) {
         int sensed = sensor.read(currentTemp);
         GardenLogger.logEvent("INFO", "Sensor", "Temperature reading=" + sensed + "F");
         
-        // Adjust thresholds to match plant safety range (40-100F)
-        if (sensed < TARGET_MIN_TEMP) {
+        if (sensed < MIN_TEMP) {
             heater.on(sensed);
             cooler.off();
-            GardenLogger.log("AUTOMATION: Heater activated. Warming garden from " + sensed + "F.");
-        } else if (sensed > TARGET_MAX_TEMP) {
+            GardenLogger.log("AUTOMATION: Heater activated. Temperature is " + sensed + "F, warming to above " + MIN_TEMP + "F.");
+        } else if (sensed > MAX_TEMP) {
             cooler.on(sensed);
             heater.off();
-            GardenLogger.log("AUTOMATION: Misting fans activated. Cooling garden from " + sensed + "F.");
+            GardenLogger.log("AUTOMATION: Cooler activated. Temperature is " + sensed + "F, cooling to below " + MAX_TEMP + "F.");
         } else {
             heater.off();
             cooler.off();
+            GardenLogger.log("AUTOMATION: Temperature is " + sensed + "F (within safe range " + MIN_TEMP + "-" + MAX_TEMP + "F). No climate control needed.");
         }
     }
 
     /**
      * Calculate effective temperature after applying heating/cooling effects
-     * Simulates gradual temperature change when devices are active
+     * Directly adjusts temperature to safe range (50-90F)
      */
     public int getEffectiveTemperature(int currentTemp) {
         int effectiveTemp = currentTemp;
         
         if (heater.isOn()) {
-            // Heater gradually increases temperature towards safe range
-            // Target: around 60-70F (middle of safe range)
-            int targetTemp = 65;
-            if (effectiveTemp < targetTemp) {
-                // Increase by up to 5 degrees per cycle, but don't exceed target
-                effectiveTemp = Math.min(targetTemp, effectiveTemp + 5);
-                if (effectiveTemp != currentTemp) {
-                    GardenLogger.log("AUTOMATION: Temperature rising to " + effectiveTemp + "F (heater active).");
-                }
+            // Heater directly increases temperature to above 50F
+            if (effectiveTemp < MIN_TEMP) {
+                int targetTemp = MIN_TEMP + 1; // Set to 51F (above 50F)
+                effectiveTemp = targetTemp;
+                GardenLogger.log("AUTOMATION: Temperature adjusted from " + currentTemp + "F to " + effectiveTemp + "F (heater active, now above " + MIN_TEMP + "F).");
             }
         }
         
         if (cooler.isOn()) {
-            // Cooler gradually decreases temperature towards safe range
-            // Target: around 60-70F (middle of safe range)
-            int targetTemp = 65;
-            if (effectiveTemp > targetTemp) {
-                // Decrease by up to 5 degrees per cycle, but don't go below target
-                effectiveTemp = Math.max(targetTemp, effectiveTemp - 5);
-                if (effectiveTemp != currentTemp) {
-                    GardenLogger.log("AUTOMATION: Temperature dropping to " + effectiveTemp + "F (cooler active).");
-                }
+            // Cooler directly decreases temperature to below 90F
+            if (effectiveTemp > MAX_TEMP) {
+                int targetTemp = MAX_TEMP - 1; // Set to 89F (below 90F)
+                effectiveTemp = targetTemp;
+                GardenLogger.log("AUTOMATION: Temperature adjusted from " + currentTemp + "F to " + effectiveTemp + "F (cooler active, now below " + MAX_TEMP + "F).");
             }
-        }
-        
-        // Ensure temperature stays within absolute safe bounds
-        if (effectiveTemp < MIN_SAFE_TEMP) {
-            effectiveTemp = MIN_SAFE_TEMP;
-        } else if (effectiveTemp > MAX_SAFE_TEMP) {
-            effectiveTemp = MAX_SAFE_TEMP;
         }
         
         return effectiveTemp;

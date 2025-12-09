@@ -20,26 +20,23 @@ public class HydrationSystem {
 
             int currentWater = p.getCurrentWaterLevel();
             int requirement = p.getWaterRequirement();
-            int optimalRange = requirement / 10; // 10% tolerance
-            int lowerBound = requirement - optimalRange;
-            int upperBound = requirement + optimalRange;
 
-            if (currentWater < lowerBound) {
-                // Too little water - add water completely to optimal range
-                int needed = lowerBound - currentWater;
-                GardenLogger.log("AUTOMATION: Sprinkler activated for " + p.getName() + " (+" + needed + " units)");
+            if (currentWater < requirement) {
+                // Too little water - directly adjust to ideal value
+                int needed = requirement - currentWater;
+                GardenLogger.log("AUTOMATION: Sprinkler activated for " + p.getName() + ". Water adjusted from " + currentWater + " to " + requirement + " (+" + needed + " units).");
                 sprinkler.activate(p.getName(), needed);
                 p.adjustWater(needed);
-            } else if (currentWater > upperBound) {
-                // Too much water - drain excess completely to optimal range
-                int excess = currentWater - upperBound;
-                GardenLogger.log("AUTOMATION: Drainage opened for " + p.getName() + " (-" + excess + " units)");
+            } else if (currentWater > requirement) {
+                // Too much water - directly adjust to ideal value
+                int excess = currentWater - requirement;
+                GardenLogger.log("AUTOMATION: Drainage opened for " + p.getName() + ". Water adjusted from " + currentWater + " to " + requirement + " (-" + excess + " units).");
                 p.adjustWater(-excess);
                 sprinkler.deactivate();
             } else {
+                // Water is at ideal value
                 sprinkler.deactivate();
             }
-            // If water is in optimal range, no action needed
         }
     }
 }
