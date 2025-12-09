@@ -252,6 +252,9 @@ public class GardenApp extends Application {
         dayLabel.setText("Day: " + dayCount);
         GardenLogger.log("--- STARTING DAY " + dayCount + " ---");
 
+        // --- NEW: Perform Daily Maintenance (Water Evaporation) ---
+        GardenManager.getInstance().performDailyMaintenance();
+
         int randomTemp = 40 + random.nextInt(70);
         api.temperature(randomTemp);
 
